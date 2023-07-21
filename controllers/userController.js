@@ -1,11 +1,12 @@
 
+const generateToken = require('../config/generateToken.js');
 const userModel = require('../models/userModel.js') ;
 
-//! function for creating new user 
+//! function for creating new user :
 const createUser = async (req , res) => {
     try {
         const userExists = await userModel.find(req.body) ;
-        if ( !userExists) {
+        if ( userExists.length == 0 ) {
             try {
                 await userModel.create(req.body) ;
                 res.status(200).json({
@@ -39,15 +40,16 @@ const createUser = async (req , res) => {
     }
 }
 
-//! function for login an user
+//! function for login an user :
 const loginUser = async (req , res) => {
     try {
         const {email , password} = req.body ;
-        const userExists = await userModel.find({email : email , password : password}) ;
+        const userExists = await userModel.find({email : email , password :password}) ;
         if ( userExists.length == 1 ) {
             res.status(200).json({
                 'success' : true ,
                 'message' : `Welcome back ${userExists[0].first_name} ${userExists[0].last_name}` ,
+                'token' : generateToken(userExists[0]._id) ,
             })
         } 
         else {
@@ -65,4 +67,63 @@ const loginUser = async (req , res) => {
     }
 }
 
-module.exports = { createUser , loginUser } ;
+//! function for getting all users :
+const getAllUsers = async (req , res) => {
+    try {
+        allUsers = await userModel.find({}) ;
+        res.status(200).json({
+            'success' : true ,
+            'users' : allUsers ,
+        })
+    }
+    catch(error) {
+        res.status(404).json({
+            'success' : false ,
+            'error' : error ,
+        }) ;
+    }
+}
+
+//! function for upadating an user :
+const updateUser = async (req , res) => {
+    try {
+        const id = req.params.id ;
+        await userModel.findByIdAndUpdate(id , req.body) ;
+        res.status(200).json({
+            'success' : true ,
+            'message' : 'the user has been updated with success' ,
+        })
+    }
+    catch(error) {
+        res.status(404).json({
+            'success' : false ,
+            'error' : error ,
+        }) ;
+    }
+}
+
+//! function for deleting an user :
+const deleteUser = async (req , res) => {
+    try {
+        const id = req.params.id ;
+        await userModel.findByIdAndDelete( id ) ;
+        res.status(200).json({
+            'success' : true ,
+            'message' : 'the user has been deleted with success' ,
+        })
+    }
+    catch(error) {
+        res.status(404).json({
+            'success' : false ,
+            'error' : error ,
+        }) ;
+    }
+}
+
+module.exports = { 
+    createUser  , 
+    loginUser   , 
+    getAllUsers , 
+    updateUser  ,
+    deleteUser  ,
+} ;
