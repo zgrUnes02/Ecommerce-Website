@@ -102,8 +102,13 @@ const getUser = async (req , res) => {
 //! function for upadating an user :
 const updateUser = async (req , res) => {
     try {
-        const { id } = req.params ;
-        await userModel.findByIdAndUpdate( id , req.body ) ;
+        const { _id } = req.user ; //? (req.user) it means that th user authentificated can update his information
+        await userModel.findByIdAndUpdate( _id , {
+            first_name : req.body.first_name ,
+            last_name : req.body.last_name ,
+            email : req.body.email ,
+            password : req.body.password 
+        } ) ;
         res.status(200).json({
             'success' : true ,
             'message' : 'the user has been updated with success' ,
