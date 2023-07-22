@@ -84,11 +84,26 @@ const getAllUsers = async (req , res) => {
     }
 }
 
+//! function for getting a specifig user :
+const getUser = async (req , res) => {
+    try {
+        const { id } = req.params ;
+        const user = await userModel.findById( id ) ;
+        res.status(200).json({user : user}) ;
+    }
+    catch(error) {
+        res.status(404).json({
+            'success' : false ,
+            'error' : error ,
+        }) ;
+    }
+}
+
 //! function for upadating an user :
 const updateUser = async (req , res) => {
     try {
-        const id = req.params.id ;
-        await userModel.findByIdAndUpdate(id , req.body) ;
+        const { id } = req.params ;
+        await userModel.findByIdAndUpdate( id , req.body ) ;
         res.status(200).json({
             'success' : true ,
             'message' : 'the user has been updated with success' ,
@@ -105,7 +120,7 @@ const updateUser = async (req , res) => {
 //! function for deleting an user :
 const deleteUser = async (req , res) => {
     try {
-        const id = req.params.id ;
+        const { id } = req.params ;
         await userModel.findByIdAndDelete( id ) ;
         res.status(200).json({
             'success' : true ,
@@ -122,7 +137,8 @@ const deleteUser = async (req , res) => {
 
 module.exports = { 
     createUser  , 
-    loginUser   , 
+    loginUser   ,
+    getUser , 
     getAllUsers , 
     updateUser  ,
     deleteUser  ,

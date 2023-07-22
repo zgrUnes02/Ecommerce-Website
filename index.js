@@ -16,5 +16,6 @@ app.post('/login' , authRoute) ;
 app.get('/users' , userManagment) ;
 app.put('/user/update/:id' , userManagment) ;
 app.delete('/user/delete/:id' , userManagment) ;
+app.get('/user/:id' , userManagment) ;
 
 
