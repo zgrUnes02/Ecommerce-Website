@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
             type : mongoose.Schema.Types.ObjectId , ref : 'Product' ,
         } ,
     ] ,
+    isBlocked : {
+        type : Boolean ,
+        default : false ,
+    } ,
 } , { timestamps : true } ) ;
 
 const userModel = mongoose.model('users' , userSchema) ;

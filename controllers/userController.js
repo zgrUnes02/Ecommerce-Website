@@ -140,11 +140,49 @@ const deleteUser = async (req , res) => {
     }
 }
 
+//! function for blocking an user :
+const blockUser = async (req , res) => {
+    try {
+        const { id } = req.params ;
+        await userModel.findByIdAndUpdate(id , {isBlocked : true}) ;
+        res.status(200).json({
+            'success' : true ,
+            'message' : 'the user has been blocked with success' ,
+        })
+    }
+    catch(error) {
+        res.status(404).json({
+            'success' : false ,
+            'error' : error ,
+        }) ;
+    }
+}
+
+//! function for unblocking an user :
+const unblockUser = async (req , res) => {
+    try {
+        const { id } = req.params ;
+        await userModel.findByIdAndUpdate(id , {isBlocked : false}) ;
+        res.status(200).json({
+            'success' : true ,
+            'message' : 'the user has been unblocked with success' ,
+        })
+    }
+    catch(error) {
+        res.status(404).json({
+            'success' : false ,
+            'error' : error ,
+        }) ;
+    }
+}
+
 module.exports = { 
-    createUser  , 
-    loginUser   ,
+    createUser , 
+    loginUser ,
     getUser , 
     getAllUsers , 
-    updateUser  ,
-    deleteUser  ,
+    updateUser ,
+    deleteUser ,
+    blockUser ,
+    unblockUser ,
 } ;
